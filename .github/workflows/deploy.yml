@@ -10,7 +10,7 @@ env:
 jobs:
   test:
     env: 
-      MONGODB_DB_NAME: cluster0.pfqyeyk.mongodb.net
+      MONGODB_CLUSTER_ADDRESS: cluster0.pfqyeyk.mongodb.net
       MONGODB_USERNAME: perfumobas23_db_user
       MONGODB_PASSWORD:  X18OrnpqHDsKbSxK
       PORT: 8080
