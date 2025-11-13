@@ -26,6 +26,23 @@ jobs:
           key: npm-deps-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         run: npm ci
+      - name: Test MongoDB connection
+        run: |
+          echo "Testing connection to: mongodb+srv://${{ env.MONGODB_USERNAME }}:***@${{ env.MONGODB_CLUSTER_ADDRESS }}"
+          node -e "
+          import('mongodb').then(async ({ MongoClient }) => {
+            const uri = 'mongodb+srv://${{ env.MONGODB_USERNAME }}:${{ env.MONGODB_PASSWORD }}@${{ env.MONGODB_CLUSTER_ADDRESS }}/?retryWrites=true&w=majority';
+            const client = new MongoClient(uri);
+            try {
+              await client.connect();
+              console.log('✓ Connection successful!');
+              await client.close();
+            } catch (error) {
+              console.error('✗ Connection failed:', error.message);
+              process.exit(1);
+            }
+          });
+          "
       - name: Run server
         run: npm start & npx wait-on http://127.0.0.1:${{ env.PORT }}
       - name: Run tests
